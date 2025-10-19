@@ -19,7 +19,8 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   line-height:1.4;
-  padding:0; 
+  padding:0;
+  display:block; /* override Vite template flex */
 }
 
 .App{
@@ -100,3 +101,51 @@ a.secondary{
   .hero-content h1{font-size:1.6rem}
 
 }
+/* Dashboard */
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;
+  margin:16px 0 24px;
+}
+.kpi-card{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  padding:12px;
+}
+.kpi-label{ color:var(--muted); font-size:0.85rem; }
+.kpi-value{ font-weight:700; font-size:1.1rem; margin-top:4px; }
+
+.charts-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.chart-card{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  padding:12px;
+}
+.chart-title{ margin:0 0 8px; }
+.chart-wrap{ height:260px; }
+
+.table-wrap{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  overflow:auto;
+}
+.table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.95rem;
+}
+.table th, .table td{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  text-align:left;
+}
+.table th{ color:var(--muted); font-weight:600; }

@@ -1,8 +1,10 @@
+import { Routes, Route, Link, Outlet } from 'react-router-dom';
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css';
 import logo from './assets/react.svg';
+import Dashboard from './pages/Dashboard';
 
 function Feature({ title, children }) {
   return (
@@ -22,9 +24,9 @@ function TeamCard({ name, handle }) {
   );
 }
 
-export default function App() {
+function HomePage() {
   return (
-    <div className="App">
+    <>
       <header className="hero">
         <nav className="nav" aria-label="Main navigation">
           <div className="nav-left">
@@ -33,6 +35,7 @@ export default function App() {
           </div>
           <div className="nav-right">
             <a href="#features">Features</a>
+            <Link to="/dashboard" className="btn">Dashboard</Link>
             <a href="/signup" className="btn">Get Started</a>
           </div>
         </nav>
@@ -97,10 +100,42 @@ export default function App() {
           <a href="/signup" className="primary large">Create a token-based session</a>
         </section>
       </main>
+    </>
+  );
+}
+
+function Layout() {
+  return (
+    <div className="App">
+      {}
+      <nav className="nav" aria-label="Main navigation">
+        <div className="nav-left">
+          <img src={logo} className="logo" alt="PortfolioTracker logo" />
+          <span className="brand">PortfolioTracker</span>
+        </div>
+        <div className="nav-right">
+          <Link to="/">Home</Link>
+          <Link to="/dashboard" className="btn">Dashboard</Link>
+          <a href="/signup" className="btn">Get Started</a>
+        </div>
+      </nav>
+
+      <Outlet />
 
       <footer className="footer">
         <p>© {new Date().getFullYear()} Portfolio Tracker — Team 98</p>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
+    </Routes>
   );
 }
