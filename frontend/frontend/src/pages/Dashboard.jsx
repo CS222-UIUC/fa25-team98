@@ -52,12 +52,21 @@ export default function Dashboard() {
   const dayChange = 532;
   const dayPct = (dayChange / (totalValue - dayChange) * 100).toFixed(2);
 
+  const token = typeof window !== 'undefined' ? localStorage.getItem('pt_token') : '';
+  const usingMock = !token; // simple indicator for now
+
   return (
     <div>
       <h1 style={{ margin: '0 0 8px' }}>Dashboard</h1>
       <p className="subtitle" style={{ marginTop: 0 }}>
         Mock portfolio overview with charts, allocation, and positions.
       </p>
+
+      {usingMock && (
+        <div className="banner">
+          <span>Using mock data. Set a token to fetch from FastAPI when it’s running.</span>
+        </div>
+      )}
 
       <section className="kpis">
         <div className="kpi-card">

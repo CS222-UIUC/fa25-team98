@@ -1,10 +1,7 @@
 import { Routes, Route, Link, Outlet } from 'react-router-dom';
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css';
-import logo from './assets/react.svg';
 import Dashboard from './pages/Dashboard';
+import Header from './components/Header';
 
 function Feature({ title, children }) {
   return (
@@ -28,18 +25,6 @@ function HomePage() {
   return (
     <>
       <header className="hero">
-        <nav className="nav" aria-label="Main navigation">
-          <div className="nav-left">
-            <img src={logo} className="logo" alt="PortfolioTracker logo" />
-            <span className="brand">PortfolioTracker</span>
-          </div>
-          <div className="nav-right">
-            <a href="#features">Features</a>
-            <Link to="/dashboard" className="btn">Dashboard</Link>
-            <a href="/signup" className="btn">Get Started</a>
-          </div>
-        </nav>
-
         <div className="hero-content">
           <h1>Portfolio Tracker — with personality</h1>
           <p className="subtitle">
@@ -70,9 +55,6 @@ function HomePage() {
             </Feature>
             <Feature title="Sentiment context">
               NLP-powered sentiment analysis surfaces how social posts relate to positions and market moves.
-            </Feature>
-            <Feature title="Export & alerts">
-              Price alerts, exportable transaction reports and basic tax-ready summaries.
             </Feature>
           </div>
         </section>
@@ -107,21 +89,8 @@ function HomePage() {
 function Layout() {
   return (
     <div className="App">
-      {}
-      <nav className="nav" aria-label="Main navigation">
-        <div className="nav-left">
-          <img src={logo} className="logo" alt="PortfolioTracker logo" />
-          <span className="brand">PortfolioTracker</span>
-        </div>
-        <div className="nav-right">
-          <Link to="/">Home</Link>
-          <Link to="/dashboard" className="btn">Dashboard</Link>
-          <a href="/signup" className="btn">Get Started</a>
-        </div>
-      </nav>
-
+      <Header />
       <Outlet />
-
       <footer className="footer">
         <p>© {new Date().getFullYear()} Portfolio Tracker — Team 98</p>
       </footer>
