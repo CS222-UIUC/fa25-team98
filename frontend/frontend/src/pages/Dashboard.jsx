@@ -1,167 +1,77 @@
-import React, { useEffect, useState } from "react";
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
+  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, BarChart, Bar, Legend
+} from 'recharts';
+import { useEffect, useState } from 'react';
+import { api, mockData } from '../services/api';
+import Sparkline from '../components/Sparkline';
 
-const COLORS = [
-  "#2563eb",
-  "#06b6d4",
-  "#22c55e",
-  "#f59e0b",
-  "#ef4444",
-  "#a855f7",
-];
-
-const portfolioHistory = [
-  { date: "10/01", value: 48000 },
-  { date: "10/03", value: 48650 },
-  { date: "10/05", value: 49210 },
-  { date: "10/07", value: 50120 },
-  { date: "10/09", value: 49750 },
-  { date: "10/11", value: 50580 },
-  { date: "10/13", value: 51240 },
-  { date: "10/15", value: 51700 },
-  { date: "10/17", value: 52120 },
-  { date: "10/19", value: 52340 },
-];
-
-const allocation = [
-  { name: "AAPL", value: 28 },
-  { name: "MSFT", value: 24 },
-  { name: "NVDA", value: 18 },
-  { name: "VOO", value: 15 },
-  { name: "TSLA", value: 10 },
-  { name: "CASH", value: 5 },
-];
-
-const dailyPnl = [
-  { date: "10/11", pnl: 220 },
-  { date: "10/12", pnl: -80 },
-  { date: "10/13", pnl: 140 },
-  { date: "10/14", pnl: 60 },
-  { date: "10/15", pnl: 190 },
-  { date: "10/16", pnl: -40 },
-  { date: "10/17", pnl: 120 },
-  { date: "10/18", pnl: 90 },
-  { date: "10/19", pnl: 160 },
-];
-
-const MOCK_POSITIONS = [
-  {
-    symbol: "AAPL",
-    name: "Apple Inc.",
-    qty: 24,
-    avgCost: 168.12,
-    price: 177.22,
-    weight: 28,
-  },
-  {
-    symbol: "MSFT",
-    name: "Microsoft",
-    qty: 12,
-    avgCost: 362.15,
-    price: 375.31,
-    weight: 24,
-  },
-  {
-    symbol: "NVDA",
-    name: "NVIDIA",
-    qty: 6,
-    avgCost: 844.2,
-    price: 867.9,
-    weight: 18,
-  },
-  {
-    symbol: "VOO",
-    name: "S&P 500 ETF",
-    qty: 10,
-    avgCost: 505.4,
-    price: 512.1,
-    weight: 15,
-  },
-  {
-    symbol: "TSLA",
-    name: "Tesla",
-    qty: 8,
-    avgCost: 232.1,
-    price: 228.7,
-    weight: 10,
-  },
-];
+const COLORS = ["#2563eb","#06b6d4","#22c55e","#f59e0b","#ef4444","#a855f7"];
 
 export default function Dashboard() {
-  const [positions, setPositions] = useState(MOCK_POSITIONS);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const totalValue = 52340;
-  const dayChange = 532;
-  const dayPct = ((dayChange / (totalValue - dayChange)) * 100).toFixed(2);
-
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("pt_token") : "";
-  const usingMock = !token;
+  const [loading, setLoading] = useState(true);
+  const [usingMock, setUsingMock] = useState(false);
+  const [portfolio, setPortfolio] = useState(mockData.portfolio);
+  const [positions, setPositions] = useState(mockData.positions);
+  const [allocation, setAllocation] = useState(mockData.allocation);
+  const [error, setError] = useState('');
 
   useEffect(() => {
+    const token = localStorage.getItem('pt_token') || '';
     if (!token) {
-      setPositions(MOCK_POSITIONS);
-      setError("");
+      setUsingMock(true);
+      setLoading(false);
       return;
     }
+    (async () => {
+      try {
+        const [pf, pos, alloc] = await Promise.all([
+          api.portfolio(token),
+          api.positions(token),
+          api.allocation(token),
+        ]);
+        setPortfolio(pf);
+        setPositions(pos);
+        setAllocation(alloc);
+      } catch (e) {
+        setError('API unreachable, showing mock data.');
+        setUsingMock(true);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-    setLoading(true);
-    setError("");
+  const totalValue = portfolio.value;
+  const dayChange = portfolio.dayChange;
+  const dayPct = portfolio.dayPct;
 
-    fetch(`http://127.0.0.1:8000/portfolio/${token}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch portfolio");
-        return res.json();
-      })
-      .then((data) => {
-        const mapped = data.map((p) => ({
-          symbol: p.symbol,
-          name: p.name,
-          qty: p.qty,
-          avgCost: p.avg_cost,
-          price: p.price,
-          weight: p.weight,
-        }));
-        setPositions(mapped);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(
-          "Could not load portfolio from backend. Showing mock positions."
-        );
-        setPositions(MOCK_POSITIONS);
-      })
-      .finally(() => setLoading(false));
-  }, [token]);
+  if (loading) {
+    return (
+      <div>
+        <h1 style={{ margin: '0 0 8px' }}>Dashboard</h1>
+        <p className="subtitle" style={{ marginTop: 0 }}>Loading portfolio…</p>
+        <div className="skeleton-grid">
+          <div className="skeleton-card" />
+          <div className="skeleton-card" />
+          <div className="skeleton-card" />
+        </div>
+      </div>
+    );
+  }
+
+  const risk = { beta: 1.12, vol30d: 18.5, sharpe1y: 1.4 };
 
   return (
     <div>
-      <h1 style={{ margin: "0 0 8px" }}>Dashboard</h1>
+      <h1 style={{ margin: '0 0 8px' }}>Dashboard</h1>
       <p className="subtitle" style={{ marginTop: 0 }}>
-        Mock portfolio overview with charts, allocation, and positions.
+        {usingMock ? 'Mock portfolio overview.' : 'Live portfolio overview.'}
       </p>
 
-      {usingMock && (
+      {(usingMock || error) && (
         <div className="banner">
-          <span>
-            Using mock data. Set a token to fetch from FastAPI when it’s
-            running.
-          </span>
+          <span>{error || 'Using mock data. Set a token and run FastAPI to fetch live data.'}</span>
         </div>
       )}
 
@@ -172,8 +82,14 @@ export default function Dashboard() {
         </div>
         <div className="kpi-card">
           <div className="kpi-label">Day Change</div>
-          <div className="kpi-value" style={{ color: "#22c55e" }}>
-            +${dayChange.toLocaleString()} ({dayPct}%)
+          <div
+            className="kpi-value"
+            style={{
+              color: dayChange >= 0 ? "#22c55e" : "#ef4444",
+            }}
+          >
+            {dayChange >= 0 ? "+" : "-"}
+            ${Math.abs(dayChange).toLocaleString()} ({dayPct}%)
           </div>
         </div>
         <div className="kpi-card">
@@ -194,7 +110,7 @@ export default function Dashboard() {
           <div className="chart-wrap">
             <ResponsiveContainer width="100%" height={260}>
               <AreaChart
-                data={portfolioHistory}
+                data={mockData.portfolioHistory}
                 margin={{ left: 8, right: 8, top: 8, bottom: 0 }}
               >
                 <defs>
@@ -251,7 +167,7 @@ export default function Dashboard() {
           <div className="chart-wrap">
             <ResponsiveContainer width="100%" height={260}>
               <BarChart
-                data={dailyPnl}
+                data={mockData.dailyPnl}
                 margin={{ left: 8, right: 8, top: 8, bottom: 0 }}
               >
                 <XAxis dataKey="date" stroke="#9aa4b2" />
@@ -264,10 +180,30 @@ export default function Dashboard() {
         </div>
 
         <div className="chart-card">
+          <h3 className="chart-title">Risk Metrics</h3>
+          <div className="chart-wrap">
+            <div className="risk-metrics">
+              <div className="risk-metric">
+                <div className="metric-label">Beta</div>
+                <div className="metric-value">{risk.beta.toFixed(2)}</div>
+              </div>
+              <div className="risk-metric">
+                <div className="metric-label">30d Volatility</div>
+                <div className="metric-value">{risk.vol30d.toFixed(1)}%</div>
+              </div>
+              <div className="risk-metric">
+                <div className="metric-label">1Y Sharpe Ratio</div>
+                <div className="metric-value">{risk.sharpe1y.toFixed(2)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="chart-card">
           <h3 className="chart-title">Notes</h3>
           <p className="muted" style={{ marginTop: 8 }}>
-            • Data shown is mock. Replace with FastAPI endpoints later.
-            <br />• Use your token session to fetch user portfolio.
+            • Data shown is mock unless FastAPI is running.
+            <br />• Use your token to fetch user portfolio.
             <br />• Cache symbols in Postgres to reduce API calls.
           </p>
         </div>
@@ -275,14 +211,6 @@ export default function Dashboard() {
 
       <section className="positions">
         <h3 style={{ marginBottom: 12 }}>Positions</h3>
-
-        {loading && <p className="muted">Loading positions…</p>}
-        {error && (
-          <p className="muted" style={{ color: "#f97316" }}>
-            {error}
-          </p>
-        )}
-
         <div className="table-wrap">
           <table className="table">
             <thead>

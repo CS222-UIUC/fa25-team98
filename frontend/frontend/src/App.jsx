@@ -2,6 +2,10 @@ import { Routes, Route, Link, Outlet } from 'react-router-dom';
 import './App.css';
 import Dashboard from './pages/Dashboard';
 import Header from './components/Header';
+import PositionsForm from './pages/PositionsForm';
+import Timelines from './pages/Timelines';
+import Politicians from './pages/Politicians';
+import ReportsAlerts from './pages/ReportsAlerts';
 
 function Feature({ title, children }) {
   return (
@@ -104,6 +108,11 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/positions" element={<PositionsForm />} />
+        <Route path="/timelines" element={<Timelines />} />
+        <Route path="/politicians" element={<Politicians />} />
+        <Route path="/reports" element={<ReportsAlerts />} />
+        <Route path="*" element={<div style={{ padding: 24 }}>Page not found.</div>} />
       </Route>
     </Routes>
   );

@@ -30,8 +30,11 @@ export default function Header() {
       </div>
       <div className="nav-right">
         <Link to="/" className={pathname === '/' ? 'active' : ''}>Home</Link>
-        <Link to="/dashboard" className={`btn ${pathname === '/dashboard' ? 'active' : ''}`}>Dashboard</Link>
-
+        <Link to="/dashboard" className={pathname === '/dashboard' ? 'active btn' : 'btn'}>Dashboard</Link>
+        <Link to="/positions" className={pathname === '/positions' ? 'active' : ''}>Positions</Link>
+        <Link to="/timelines" className={pathname === '/timelines' ? 'active' : ''}>Timelines</Link>
+        <Link to="/politicians" className={pathname === '/politicians' ? 'active' : ''}>Politicians</Link>
+        <Link to="/reports" className={pathname === '/reports' ? 'active' : ''}>Reports & Alerts</Link>
         {token ? (
           <span className="token-pill" title={token}>
             Token: {short}

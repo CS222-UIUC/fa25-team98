@@ -25,16 +25,14 @@ body{
 
 .App{
   max-width:var(--max-width);
-  width:100%;
-  margin:24px auto;   
+  margin:0 auto;
   display:flex;
   flex-direction:column;
   gap:32px;
-  padding:24px;          
+  width:100%;
+  padding:24px;
   box-sizing:border-box;
-
 }
-
 
 .nav{
   display:flex;
@@ -44,7 +42,7 @@ body{
 }
 .nav-left{display:flex;align-items:center;gap:12px}
 .logo{width:40px;height:40px}
-.brand{font-weight:700;font-size:1.1rem}
+.brand{font-weight:700;font-size:1.15rem; font-family:Sora, Inter, ui-sans-serif}
 .nav-right{display:flex;gap:16px;align-items:center}
 .nav-right a{color:var(--muted);text-decoration:none}
 .nav-right .btn{
@@ -77,8 +75,8 @@ body{
 
 
 .hero-content{text-align:center;max-width:780px}
-.hero-content h1{font-size:2.2rem;margin:0 0 12px}
-.subtitle{color:var(--muted);margin-bottom:18px}
+.hero-content h1{font-size:2.4rem;margin:0 0 12px; line-height:1.1}
+.subtitle{color:var(--muted);margin-bottom:18px; font-size:1.05rem}
 .hero-ctas{display:flex;gap:12px;justify-content:center}
 a.primary{
   background:linear-gradient(90deg,var(--accent),var(--accent-2));
@@ -143,6 +141,11 @@ a.secondary{
 .chart-title{ margin:0 0 8px; }
 .chart-wrap{ height:260px; }
 
+.input{
+  width:100%; padding:8px 10px; border-radius:8px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#0f1724; color:#e6eef8;
+}
 .table-wrap{
   background:var(--glass);
   border:1px solid rgba(255,255,255,0.06);
@@ -160,25 +163,34 @@ a.secondary{
   text-align:left;
 }
 .table th{ color:var(--muted); font-weight:600; }
-
-.modal{
-  position:fixed; inset:0; background:rgba(0,0,0,0.5);
-  display:flex; align-items:center; justify-content:center; padding:16px; z-index:20;
+.chart-card{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  padding:12px;
 }
-.modal-card{
-  width:min(520px, 100%); background:#0b1220; border:1px solid rgba(255,255,255,0.08);
-  border-radius:12px; padding:16px;
-}
-.input{
-  width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);
-  background:#0f1724; color:#e6eef8; margin:8px 0 12px;
-}
-.modal-actions{ display:flex; justify-content:flex-end; gap:8px; }
-button.primary{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; border:none; padding:8px 14px; border-radius:8px; }
-button.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.1); color:#e6eef8; padding:8px 14px; border-radius:8px; }
-
+.chart-title{ margin:0 0 8px; }
+.chart-wrap{ height:260px; }
 .banner{
   border:1px dashed rgba(255,255,255,0.2);
   background:rgba(37,99,235,0.06);
   padding:10px 12px; border-radius:8px; margin:8px 0 12px; color:#9aa4b2;
+}
+
+.skeleton-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+  margin-top:12px;
+}
+.skeleton-card{
+  height:180px;
+  border-radius:10px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
