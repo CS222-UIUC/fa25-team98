@@ -1,15 +1,12 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// Proxy /api to FastAPI on localhost:8000
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-      },
-    },
+  test: {
+    environment: "jsdom",   // 👈 gives us window, document, etc.
+    globals: true,          // so we can use describe/it/expect without imports if we want
+    setupFiles: "./src/tests/setupTests.js",
   },
 });
