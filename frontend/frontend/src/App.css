@@ -107,7 +107,7 @@ a.secondary{
 
 
 @media (max-width:640px){
-  .hero-content h1{font-size:1.6rem}
+  .hero-content h1{font-size:1.6rem }
 
 }
 
@@ -193,4 +193,63 @@ a.secondary{
 @keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* Prevent any child background/pseudo overlay from painting outside its stacking context */
+#root {
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+/* If your main wrapper exists, make sure it doesn't force extra height */
+main, .container, .page, .content {
+  height: auto;
+  min-height: 0;
+}
+
+/* Card/grid paint containment */
+.feature-grid {
+  align-items: start;
+}
+
+.feature {
+  position: relative;
+  overflow: hidden; /* clips accidental ::before overlays */
+}
+
+/* If any component uses pseudo-elements for gradients, keep them bounded */
+.feature::before,
+.feature::after {
+  inset: 0;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+
+/* Layout/paint safety: prevents large background layers from spilling */
+html, body {
+  height: auto;
+  min-height: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  isolation: isolate; /* prevents stray z-index backgrounds from bleeding across */
+}
+
+/* Ensure cards/sections don't create huge painted areas */
+.feature-grid {
+  align-items: stretch;
+}
+
+.feature {
+  position: relative;
+  overflow: hidden; /* clips internal gradients/pseudo elements if any */
+}
+
+/* If you have any "glass" overlay/pseudo elements, keep them inside cards */
+.feature::before,
+.feature::after {
+  max-width: 100%;
+  max-height: 100%;
 }

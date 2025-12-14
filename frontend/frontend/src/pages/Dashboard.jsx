@@ -202,9 +202,7 @@ export default function Dashboard() {
         <div className="chart-card">
           <h3 className="chart-title">Notes</h3>
           <p className="muted" style={{ marginTop: 8 }}>
-            • Data shown is mock unless FastAPI is running.
             <br />• Use your token to fetch user portfolio.
-            <br />• Cache symbols in Postgres to reduce API calls.
           </p>
         </div>
       </section>

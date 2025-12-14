@@ -43,6 +43,13 @@ body {
   min-height: 100vh;
   display: block;
   place-items: initial;
+  overflow-x: hidden;
+  background-attachment: fixed;
+}
+
+/* Avoid any accidental full-page overlay elements */
+* {
+  box-sizing: border-box;
 }
 
 button { 
